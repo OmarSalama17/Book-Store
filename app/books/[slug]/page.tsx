@@ -1,26 +1,19 @@
+import { Book } from "@/types/book";
 import React from "react";
 
-const page = () => {
-  const book = {
-    title: "قواعد العشق الأربعون",
-    author: "إليف شفق",
-    price: "45 ر.س",
-    oldPrice: "60 ر.س",
-    discountPercent: "25%",
-    rating: 4.8,
-    reviewsCount: 1245,
-    description: `رواية "قواعد العشق الأربعون" للكاتبة التركية إليف شفق، تسرد حكايتين متوازيتين؛ إحداهما في الزمن المعاصر والأخرى في القرن الثالث عشر، حيث يلتقي الصوفي شمس التبريزي بجلال الدين الرومي. رواية تأخذك في رحلة روحية عميقة لاستكشاف الحب الإلهي والعلاقات الإنسانية وكيف يمكن للحب أن يغير حياتنا إلى الأبد.`,
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCa-_vryg0It3C0G6PxX3VZd2eFqpgZ49IRaZp-4EogNS32EXclu1QD9Rm4L02KKeV9-vTO3LDwfV3I1FQYWGTbj6H4E0BpVe2PtU7l6AE-orOcP_W9v_E_Ol3CEZWoNHDR-KZk96og5INvG1tq7Fe5H2aaQfnTkHDwWV8u6SAinkQPn1yymVARcGue6sEw2Vu1EieguhVtP46zWxDjBhb2lzf53V241GiOB7dlkzasTJ8KE80a8yPqLxGGAvSo0-c49CDlr-oiISE",
-    isBestseller: true,
-    category: "أدب عالمي",
-  };
+const page = async ({ params }: { params: { slug: string } }) => {
+  const { slug } = await params;
+  const res = await fetch(
+    `https://681ab75a17018fe5057883fc.mockapi.io/api/product?slug=${slug}`
+  );
+  const data: Book[] = await res.json();
+  const book = data[0];
 
   const bookSpecs = [
-    { label: "عدد الصفحات", value: "500 صفحة" },
-    { label: "اللغة", value: "العربية" },
-    { label: "دار النشر", value: "مسكيلياني" },
-    { label: "سنة النشر", value: "2012" },
+    { label: "عدد الصفحات", value: book.pages },
+    { label: "اللغة", value: book.language },
+    { label: "دار النشر", value: book.publisher },
+    { label: "سنة النشر", value: book.publicationYear },
   ];
 
   const features = [
@@ -77,9 +70,12 @@ const page = () => {
 
   const breadcrumbs = [
     { label: "الرئيسية", href: "#" },
-    { label: "الكتب", href: "/books" }, 
+    { label: "الكتب", href: "/books" },
     { label: book.title, href: "#", active: true },
   ];
+
+  console.log(book);
+
   return (
     <main className="container mx-auto flex flex-col items-center w-full font-sans">
       <div className="w-full px-4 md:px-10 py-8 ">
@@ -108,7 +104,6 @@ const page = () => {
         </nav>
 
         <div className="flex flex-col lg:flex-row gap-12">
-
           <div className="w-full lg:w-1/3 flex flex-col gap-4">
             <div className="aspect-[2/3] rounded-2xl overflow-hidden bg-white dark:bg-[#1e271c] border border-[#e5e8e5] dark:border-transparent relative shadow-xl">
               <img
@@ -116,7 +111,7 @@ const page = () => {
                 className="w-full h-full object-cover"
                 src={book.image}
               />
-              {book.isBestseller && (
+              {book?.badge?.type && (
                 <div className="absolute top-4 right-4 bg-primary text-[#131811] text-sm font-bold px-3 py-1 rounded-full shadow-md">
                   الأكثر مبيعاً
                 </div>
@@ -138,14 +133,24 @@ const page = () => {
                     {book.rating}
                   </span>
                   <span className="text-gray-500 dark:text-gray-400 text-xs px-1 border-r border-gray-300 dark:border-gray-600">
-                    ({book.reviewsCount.toLocaleString()} تقييم)
+                    ({book?.ratingCount?.toLocaleString()} تقييم)
                   </span>
                 </div>
-                <span className="text-green-600 text-xs font-bold flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm filled">
-                    check_circle
-                  </span>
-                  متوفر في المخزون
+                <span
+                  className={` ${
+                    book.stock > 0 ? "text-green-600 " : "text-red-600"
+                  }text-xs font-bold flex items-center gap-1`}
+                >
+                  {book.stock > 0 ? (
+                    <span className="material-symbols-outlined text-sm filled">
+                      check_circle
+                    </span>
+                  ) : (
+                    <span className="material-symbols-outlined text-[16px]">
+                      close
+                    </span>
+                  )}
+                  {book.stock > 0 ? "متوفر في المخزون" : "غير متوفر"}
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl font-black text-[#131811] dark:text-white leading-tight mb-2">
@@ -153,15 +158,18 @@ const page = () => {
               </h1>
               <p className="text-xl text-gray-500 dark:text-[#a3b99d] font-medium">
                 تأليف:{" "}
-                <a className="text-primary cursor-pointer hover:underline" href="#">
-                  {book.author}
+                <a
+                  className="text-primary cursor-pointer hover:underline"
+                  href="#"
+                >
+                  {book?.authors?.[0]}
                 </a>
               </p>
             </div>
 
             <div className="flex items-end gap-4 border-b border-[#e5e8e5] dark:border-[#2c3928] pb-6">
               <span className="text-4xl font-black text-primary">
-                {book.price}
+                {book.price}  {book.currency}
               </span>
               {book.oldPrice && (
                 <>
@@ -169,7 +177,7 @@ const page = () => {
                     {book.oldPrice}
                   </span>
                   <span className="text-sm font-bold text-red-500 bg-red-100 dark:bg-red-900/20 px-2 py-1 rounded mb-1 border border-red-200 dark:border-red-900/50">
-                    خصم {book.discountPercent}
+                    خصم {book.price}
                   </span>
                 </>
               )}
@@ -183,7 +191,7 @@ const page = () => {
               {bookSpecs.map((spec, index) => (
                 <div
                   key={index}
-                  className="flex flex-col gap-1 p-4 rounded-xl bg-white dark:bg-[#1e271c] border border-[#e5e8e5] dark:border-[#2c3928]"
+                  className="flex flex-col gap-1 p-3 rounded-xl bg-white dark:bg-[#1e271c] border border-[#e5e8e5] dark:border-[#2c3928]"
                 >
                   <span className="text-xs text-gray-500 dark:text-[#a3b99d]">
                     {spec.label}
@@ -291,7 +299,9 @@ const page = () => {
                   {item.author}
                 </p>
                 <div className="flex items-center justify-between mt-2">
-                  <div className={item.oldPrice ? "flex gap-2 items-center" : ""}>
+                  <div
+                    className={item.oldPrice ? "flex gap-2 items-center" : ""}
+                  >
                     <span className="text-lg font-bold text-primary">
                       {item.price}
                     </span>

@@ -1,7 +1,11 @@
+import Link from "next/link";
+
 export default function Header() {
-const links = [
-  {title:"" , href:""}
-]
+  const links = [
+    { title: "الرئيسية", href: "/" },
+    { title: "التصنيفات", href: "/books" },
+    { title: "عن المكتبة", href: "/about" },
+  ];
   return (
     <header className=" whitespace-nowrap border-b border-solid border-[#e5e8e5] dark:border-[#2c3928] px-10 py-4 bg-background-light dark:bg-background-dark sticky top-0 z-50">
       <div className="container mx-auto flex items-center justify-between px-4 md:px-10">
@@ -21,24 +25,15 @@ const links = [
         </div>
 
         <nav className="hidden md:flex flex-1 justify-center gap-8">
-          <a
-            className="text-sm font-medium hover:text-primary transition-colors"
-            href="#"
-          >
-            الرئيسية
-          </a>
-          <a
-            className="text-sm font-medium hover:text-primary transition-colors"
-            href="#"
-          >
-            التصنيفات
-          </a>
-          <a
-            className="text-sm font-medium hover:text-primary transition-colors"
-            href="#"
-          >
-            عن المكتبة
-          </a>
+          {links.map((link , index) => (
+            <Link
+              key={index}
+              className="text-sm font-medium hover:text-primary transition-colors"
+              href={link.href}
+            >
+              {link.title}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex gap-3">
