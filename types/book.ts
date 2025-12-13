@@ -1,0 +1,21 @@
+export type Book = {
+    id:string,
+    slug:string,
+    title:string,
+    authors:string[],
+    price:number,
+    rating:number,
+    image:string,
+    description:string,
+    category:string,
+    oldPrice:number,
+    currency:string,
+    stock:number,
+    ratingCount:number,
+    createdAt?:string,
+    pages:number,
+    language:string,
+    publisher:string,
+    publicationYear:string,
+    badge:{type:string,text:string,color:string}
+}
