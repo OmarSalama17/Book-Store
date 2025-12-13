@@ -3,7 +3,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
---color-primary:#46ec13;
---color-background-light:#f6f8f6;
---color-background-dark:#142210;
+    --color-primary: #46ec13;
+    --color-background-light: #f6f8f6;
+    --color-background-dark: #142210;
+    --radius: 1rem;
+    --radius-lg: 2rem;
+    --radius-xl: 3rem;
+    --radius-full: 9999px;
 }
