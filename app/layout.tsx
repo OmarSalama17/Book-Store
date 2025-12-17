@@ -3,6 +3,7 @@ import { Manrope, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
+import AppProvider from "./provide/AppProvider";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -40,9 +41,11 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${notoArabic.variable} antialiasedx bg-background-light dark:bg-background-dark text-[#131811] dark:text-white font-display`}
       >
-        <Header />
-        {children}
-        <Footer />
+        <AppProvider>
+          <Header />
+          {children}
+          <Footer />
+        </AppProvider>
       </body>
     </html>
   );

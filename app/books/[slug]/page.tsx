@@ -4,7 +4,7 @@ import React from "react";
 const page = async ({ params }: { params: { slug: string } }) => {
   const { slug } = await params;
   const res = await fetch(
-    `https://681ab75a17018fe5057883fc.mockapi.io/api/product?slug=${slug}`
+    `${process.env.NEXT_PUBLIC_API_URL}?slug=${slug}`
   );
   const data: Book[] = await res.json();
   const book = data[0];
