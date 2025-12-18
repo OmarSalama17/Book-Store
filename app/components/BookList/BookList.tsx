@@ -265,7 +265,7 @@ export default function BookList({ books }: Props) {
             ))}
           </div>
 
-          <div className="mt-12 flex justify-center items-center gap-2">
+          {/* <div className="mt-12 flex justify-center items-center gap-2">
             <button className="size-10 flex items-center justify-center rounded-lg border border-[#e5e8e5] dark:border-[#2c3928] bg-white dark:bg-[#1e271c] text-gray-500 hover:text-primary transition-colors disabled:opacity-50">
               <span className="material-symbols-outlined text-sm">
                 chevron_right
@@ -292,7 +292,7 @@ export default function BookList({ books }: Props) {
                 chevron_left
               </span>
             </button>
-          </div>
+          </div> */}
         </section>
       </div>
     </main>
