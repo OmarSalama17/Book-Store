@@ -1,7 +1,8 @@
 export type Cart = {
-    id: string,
-    title: string,
-    image: string,
-    price: number,
-    quantity: number
+  id: string | number;
+  title: string;
+  price: string | number;
+  image: string;
+  quantity?: number;
+  authors?: string[]; 
 }
