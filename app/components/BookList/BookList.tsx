@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useContext } from "react";
+import React, { useState, useMemo, useEffect, useContext, Suspense } from "react";
 import { Book } from "@/types/book";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { AppContext } from "../Context/AppContext";
+import { AppContext } from "../../components/Context/AppContext";
 
 type Props = {
   books: Book[];
 };
 
-export default function BookList({ books }: Props) {
+function BookListContent({ books }: Props) {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
   const searchFromUrl = searchParams.get("search");
@@ -321,5 +321,19 @@ export default function BookList({ books }: Props) {
         </section>
       </div>
     </main>
+  );
+}
+
+export default function BookList({ books }: Props) {
+  return (
+    <Suspense 
+      fallback={
+        <div className="flex justify-center items-center w-full py-32 text-primary">
+          <span className="material-symbols-outlined animate-spin text-5xl">progress_activity</span>
+        </div>
+      }
+    >
+      <BookListContent books={books} />
+    </Suspense>
   );
 }
