@@ -1,5 +1,7 @@
 import { Book } from "@/types/book";
+import Link from "next/link";
 import React from "react";
+import AddToCartButton from "../../components/AddToCartButton/AddToCartButton";
 
 const page = async ({ params }: { params: { slug: string } }) => {
   const { slug } = await params;
@@ -8,6 +10,11 @@ const page = async ({ params }: { params: { slug: string } }) => {
   );
   const data: Book[] = await res.json();
   const book = data[0];
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}`
+  );
+  const relatedBooks: Book[] = await response.json();
 
   const bookSpecs = [
     { label: "عدد الصفحات", value: book.pages },
@@ -19,7 +26,7 @@ const page = async ({ params }: { params: { slug: string } }) => {
   const features = [
     {
       icon: "local_shipping",
-      text: "شحن سريع ومجاني للطلبات فوق 200 ر.س",
+      text: "شحن سريع ومجاني للطلبات فوق 200 ج.م",
     },
     {
       icon: "verified_user",
@@ -31,50 +38,11 @@ const page = async ({ params }: { params: { slug: string } }) => {
     },
   ];
 
-  const relatedBooks = [
-    {
-      title: "ثلاثية غرناطة",
-      author: "رضوى عاشور",
-      price: "60 ر.س",
-      rating: "4.9",
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuCL1lTsgLE6baDPwCWWMUEmt5a7fbOGX93V-wX6nRwZBhfJff8915iHJ8MCsJ9uxY4CbgiBrcnHwhiVCul_XqnVY75chY-fy_Z56YmBxPCVor7MkBEOtmoDCvsUIfWYZtVdYPG1JwUk9DA8AlVcuIdkYUEVVKQ4UMLa0ABSb9ILll2YbGjS0rij6uFj3MN1uFKxMLSGbMjthOm3qT6CgCBXB6j9p8hrsFrzapfjETf_NkQ2ZPNQf6rd0Z3w5Z5pk2CnIThtfMFxqW8",
-    },
-    {
-      title: "أولاد حارتنا",
-      author: "نجيب محفوظ",
-      price: "35 ر.س",
-      oldPrice: "44 ر.س",
-      rating: "4.7",
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuAKLRxa8NMTGOVroapahnsdmMmLp2lmH2qzm9WAiUX0URoU8Mz_7bn4qhUV6A8hQzMTI39Lvz4dCz6JmnzU4L_RAV2XLB8v222ciQd9BDfWoKuBBen16uKQTUKj12S35cr5PAXgj3PKyfV2mKyr4hFRccv3arbmC7srxhpdZcczoKtox7uKM2P-hmQPLZBQADVF5St24edQRZFODJDpPJEPaSofYnnAihWDkncVd0NohETeqvpQGz1Bk8awhaY9lARMtu2lIVQEXCc",
-      badge: { text: "-20%", color: "bg-red-500 text-white" },
-    },
-    {
-      title: "مقدمة ابن خلدون",
-      author: "ابن خلدون",
-      price: "85 ر.س",
-      rating: "5.0",
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuAq0mYjMi_h6OM78dU1MuPgG3t-mbnGN4nmukCjp-YIrDW3yoSBwJSNOFiJyahvi-H9rrboilv2LMFlJqMyEhpRteKq4KAiStbAJtZ_r-f9HWNpDNiMKRXRFy8tVIDcujiiDlSPDVaMIhT_3jheQPnD26EQCtNvzpo7z46YEASFqj1cGfx3ZWwYhucdVxZWPkW6aKutJ2nAmhDIQ7SbFyZef2elBgktrmZ_NNDVyC9r3ugxRIsoBOb8mW7rZkf4bbG1Qbm0sHpg4hs",
-    },
-    {
-      title: "نظرية كل شيء",
-      author: "ستيفن هوكينغ",
-      price: "55 ر.س",
-      rating: "4.6",
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuDWCDSlY1w-ACeMbJgfI-xxWwPZIUL6K78YSeYgcstgjEAg1HJjg_VpXGyqwsos9dd3hJ_LOfT7RznYmHXo6t-CWO9rSpaUwb5c65Lhr1O4Htfuv4_RyZlCg5niamWvU2aHZHZ0AoyNt1tv3lAyNu6t1LBBszX5bM03CD1Y9yrNdJP4doHRJ-s8B_rN0QMYNuzNjutY0W-ixanhmrzOcn2PMNlwdBL8PkIi9UWCs3p-kdzzq7oueD6vU6xJMlS0njHebO3-T11cynE",
-    },
-  ];
-
   const breadcrumbs = [
-    { label: "الرئيسية", href: "#" },
+    { label: "الرئيسية", href: "/" },
     { label: "الكتب", href: "/books" },
     { label: book.title, href: "#", active: true },
   ];
-
-  console.log(book);
 
   return (
     <main className="container mx-auto flex flex-col items-center w-full font-sans">
@@ -92,12 +60,12 @@ const page = async ({ params }: { params: { slug: string } }) => {
                   {item.label}
                 </span>
               ) : (
-                <a
+                <Link
                   className="hover:text-primary transition-colors"
                   href={item.href}
                 >
                   {item.label}
-                </a>
+                </Link>
               )}
             </React.Fragment>
           ))}
@@ -158,12 +126,12 @@ const page = async ({ params }: { params: { slug: string } }) => {
               </h1>
               <p className="text-xl text-gray-500 dark:text-[#a3b99d] font-medium">
                 تأليف:{" "}
-                <a
+                <Link
                   className="text-primary cursor-pointer hover:underline"
                   href="#"
                 >
                   {book?.authors?.[0]}
-                </a>
+                </Link>
               </p>
             </div>
 
@@ -203,33 +171,7 @@ const page = async ({ params }: { params: { slug: string } }) => {
               ))}
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 mt-4">
-              <div className="flex items-center bg-white dark:bg-[#1e271c] rounded-full border border-[#e5e8e5] dark:border-[#2c3928] w-fit shadow-sm">
-                <button className="size-12 flex items-center justify-center text-[#131811] dark:text-white hover:text-primary transition-colors active:scale-90 transform">
-                  <span className="material-symbols-outlined">add</span>
-                </button>
-                <input
-                  className="w-12 bg-transparent border-none text-center font-bold text-[#131811] dark:text-white focus:ring-0 text-lg outline-none"
-                  readOnly
-                  type="number"
-                  defaultValue="1"
-                />
-                <button className="size-12 flex items-center justify-center text-[#131811] dark:text-white hover:text-primary transition-colors active:scale-90 transform">
-                  <span className="material-symbols-outlined">remove</span>
-                </button>
-              </div>
-              <button className="flex-1 h-12 rounded-full bg-[#131811] dark:bg-primary text-white dark:text-[#131811] text-base font-bold hover:bg-primary dark:hover:bg-white hover:text-[#131811] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-primary/40 transform hover:-translate-y-1">
-                <span className="material-symbols-outlined">
-                  shopping_cart_checkout
-                </span>
-                <span>إضافة إلى السلة</span>
-              </button>
-              <button className="size-12 rounded-full border border-[#e5e8e5] dark:border-[#2c3928] bg-white dark:bg-[#1e271c] flex items-center justify-center text-[#131811] dark:text-white hover:bg-red-50 hover:text-red-500 hover:border-red-200 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors shadow-sm group">
-                <span className="material-symbols-outlined group-hover:filled">
-                  favorite
-                </span>
-              </button>
-            </div>
+            <AddToCartButton book={book} />
 
             <div className="flex flex-wrap gap-6 mt-6 pt-6 border-t border-[#e5e8e5] dark:border-[#2c3928]">
               {features.map((feature, index) => (
@@ -258,24 +200,13 @@ const page = async ({ params }: { params: { slug: string } }) => {
             </span>
             قد يعجبك أيضاً
           </h2>
-          <div className="flex gap-2">
-            <button className="size-10 rounded-full border border-[#e5e8e5] dark:border-[#2c3928] flex items-center justify-center hover:bg-[#e5e8e5] dark:hover:bg-[#2c3928] text-[#131811] dark:text-white transition-colors">
-              <span className="material-symbols-outlined text-sm">
-                arrow_forward_ios
-              </span>
-            </button>
-            <button className="size-10 rounded-full border border-[#e5e8e5] dark:border-[#2c3928] flex items-center justify-center hover:bg-[#e5e8e5] dark:hover:bg-[#2c3928] text-[#131811] dark:text-white transition-colors">
-              <span className="material-symbols-outlined text-sm">
-                arrow_back_ios
-              </span>
-            </button>
-          </div>
         </div>
         <div className="flex overflow-x-auto gap-6 pb-8 [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x">
-          {relatedBooks.map((item, index) => (
-            <div
+          {relatedBooks.slice(0, 5).map((item, index) => (
+            <Link
+              href={`/books/${item.slug}`}
               key={index}
-              className="flex-none snap-start w-[240px] flex flex-col gap-4 rounded-2xl bg-white dark:bg-[#1e271c] p-4 shadow-sm border border-[#e5e8e5] dark:border-transparent hover:border-primary dark:hover:border-primary transition-all duration-300 group"
+              className="flex-none snap-start w-[240px] flex flex-col gap-4 rounded-2xl bg-white dark:bg-[#1e271c] p-4 shadow-sm border border-[#e5e8e5] dark:border-transparent hover:border-primary dark:hover:border-primary transition-all duration-300 group relative"
             >
               <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden">
                 <img
@@ -291,14 +222,14 @@ const page = async ({ params }: { params: { slug: string } }) => {
                   </div>
                 )}
               </div>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 flex-1">
                 <h3 className="text-base font-bold text-[#131811] dark:text-white line-clamp-1">
                   {item.title}
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-[#a3b99d]">
-                  {item.author}
+                  {item.authors?.[0]}
                 </p>
-                <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center justify-between mt-auto">
                   <div
                     className={item.oldPrice ? "flex gap-2 items-center" : ""}
                   >
@@ -321,13 +252,8 @@ const page = async ({ params }: { params: { slug: string } }) => {
                   </div>
                 </div>
               </div>
-              <button className="w-full h-10 rounded-full bg-[#131811] dark:bg-[#2c3928] text-white text-sm font-bold hover:bg-primary hover:text-[#131811] transition-colors flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined text-[18px]">
-                  add_shopping_cart
-                </span>
-                <span>إضافة للسلة</span>
-              </button>
-            </div>
+              <AddToCartButton book={item} compact />
+            </Link>
           ))}
         </div>
       </div>

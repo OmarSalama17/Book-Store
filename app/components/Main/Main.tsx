@@ -1,21 +1,34 @@
-import { Book } from '@/types/book';
-import React from 'react';
-import SuggestedItems from '../SuggestedItems/SuggestedItems';
+"use client";
+
+import { Book } from "@/types/book";
+import React, { useState } from "react";
+import SuggestedItems from "../SuggestedItems/SuggestedItems";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Props = {
-  featuredBooks:Book[];
-}
-export default function Main({featuredBooks}:Props) {
+  featuredBooks: Book[];
+};
+
+export default function Main({ featuredBooks }: Props) {
+  const router = useRouter();
+  const [searchInput, setSearchInput] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      router.push(`/books?search=${encodeURIComponent(searchInput.trim())}`);
+    }
+  };
+
   const categories = [
-    { name: "الروايات", icon: "menu_book" },
-    { name: "العلوم", icon: "science" },
-    { name: "التاريخ", icon: "history_edu" },
+    { name: "الروايات والأدب", icon: "menu_book" },
+    { name: "العلوم والتكنولوجيا", icon: "science" },
+    { name: "التاريخ والسياسة", icon: "history_edu" },
     { name: "تطوير الذات", icon: "psychology" },
-    { name: "أطفال", icon: "child_care" },
+    { name: "كتب الأطفال", icon: "child_care" },
     { name: "الفنون", icon: "palette" },
   ];
-
-
 
   const bestSellers = [
     {
@@ -61,7 +74,7 @@ export default function Main({featuredBooks}:Props) {
               </h2>
             </div>
             <div className="w-full max-w-[600px] z-10 mt-4">
-              <label className="flex w-full items-center rounded-full bg-[#1e271c] border border-[#41543b] focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all h-16 pl-2 pr-6 shadow-lg">
+              <form onSubmit={handleSearch} className="flex w-full items-center rounded-full bg-[#1e271c] border border-[#41543b] focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all h-16 pl-2 pr-6 shadow-lg">
                 <span className="material-symbols-outlined text-[#a3b99d]">
                   search
                 </span>
@@ -69,11 +82,16 @@ export default function Main({featuredBooks}:Props) {
                   className="flex-1 bg-transparent border-none text-white placeholder-[#a3b99d] focus:ring-0 px-4 text-base h-full outline-none"
                   placeholder="ابحث عن كتابك المفضل..."
                   type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
                 />
-                <button className="flex items-center justify-center h-12 px-8 rounded-full bg-primary text-[#131811] hover:bg-opacity-90 transition-opacity text-base font-bold bg-[#a3b99d]">
+                <button 
+                  type="submit"
+                  className="flex items-center justify-center h-12 px-8 rounded-full bg-primary text-[#131811] hover:bg-opacity-90 transition-opacity text-base font-bold bg-[#a3b99d]"
+                >
                   بحث
                 </button>
-              </label>
+              </form>
             </div>
           </div>
         </div>
@@ -85,16 +103,19 @@ export default function Main({featuredBooks}:Props) {
             <h2 className="text-[22px] font-bold leading-tight tracking-[-0.015em] text-[#131811] dark:text-white">
               تصفح حسب التصنيف
             </h2>
-            <a className="text-primary text-sm font-bold hover:underline" href="#">
+            <Link
+              className="text-primary text-sm font-bold hover:underline"
+              href="/books"
+            >
               عرض الكل
-            </a>
+            </Link>
           </div>
           <div className="flex gap-4 overflow-x-auto pb-4 [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x">
             {categories.map((cat, index) => (
-              <a
+              <Link
                 key={index}
                 className="snap-start flex flex-col items-center gap-3 min-w-[120px] group cursor-pointer"
-                href="#"
+                href={`/books?category=${cat.name}`}
               >
                 <div className="size-24 rounded-full bg-[#e5e8e5] dark:bg-[#1e271c] flex items-center justify-center group-hover:bg-primary transition-colors duration-300 border border-transparent dark:border-[#2c3928] group-hover:border-primary">
                   <span className="material-symbols-outlined text-4xl text-[#131811] dark:text-white group-hover:text-[#131811]">
@@ -104,7 +125,7 @@ export default function Main({featuredBooks}:Props) {
                 <span className="text-sm font-medium text-[#131811] dark:text-white group-hover:text-primary transition-colors">
                   {cat.name}
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -128,7 +149,7 @@ export default function Main({featuredBooks}:Props) {
             </button>
           </div>
         </div>
-              <SuggestedItems books={featuredBooks}/>
+        <SuggestedItems books={featuredBooks} />
       </div>
 
       <div className="w-full px-4 md:px-10 py-8 ">
@@ -179,7 +200,8 @@ export default function Main({featuredBooks}:Props) {
               اشترك في نشرتنا البريدية
             </h2>
             <p className="text-[#a3b99d] text-sm md:text-base">
-              كن أول من يعرف عن الكتب الجديدة، العروض الحصرية، والفعاليات الثقافية.
+              كن أول من يعرف عن الكتب الجديدة، العروض الحصرية، والفعاليات
+              الثقافية.
             </p>
           </div>
           <div className="w-full max-w-md z-10">

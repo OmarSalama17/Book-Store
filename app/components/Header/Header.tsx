@@ -37,9 +37,9 @@ export default function Header() {
         </nav>
 
         <div className="flex gap-3">
-          <button className="flex size-10 items-center justify-center rounded-full bg-[#e5e8e5] dark:bg-[#2c3928] hover:bg-primary transition-colors">
+          <Link href="/cart" className="flex size-10 items-center justify-center rounded-full bg-[#e5e8e5] dark:bg-[#2c3928] hover:bg-primary transition-colors">
             <span className="material-symbols-outlined">shopping_cart</span>
-          </button>
+          </Link>
           <button className="flex size-10 items-center justify-center rounded-full bg-[#e5e8e5] dark:bg-[#2c3928] hover:bg-primary transition-colors">
             <span className="material-symbols-outlined">account_circle</span>
           </button>
